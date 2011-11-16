@@ -130,9 +130,10 @@ app.post('/example/ok', function (req, res) {
 
 
 function parseCommandLine() {
-    var port_index, exclude_index, exclude_opts;
+    var port_index, exclude_index, exclude_opts, include_index, include_opts;
     port_index = process.argv.indexOf('--port');
     exclude_index = process.argv.indexOf('--exclude');
+    include_index = process.argv.indexOf('--include');
     if (port_index > -1) {
         jslint_port = process.argv[port_index + 1];
     }
@@ -142,6 +143,15 @@ function parseCommandLine() {
             _.each(exclude_opts, function (opt) {
                 sys.puts("Turning off " + opt);
                 jslint_options[opt] = false;
+            });
+        }
+    }
+    if (include_index > -1) {
+        include_opts = process.argv[include_index + 1].split(",");
+        if (include_opts.length > 0 && include_opts[0] !== '') {
+            _.each(include_opts, function (opt) {
+                sys.puts("Turning on " + opt);
+                jslint_options[opt] = true;
             });
         }
     }
