@@ -68,46 +68,20 @@ app.get('/', function (req, res) {
     res.render('upload.haml');
 });
 
-app.post('/jslint', function (request, res) {
-    var filename;
-    if (! request.form) {
-        throw new TypeError("form data required");
-    }
-    return request.form.complete(function (err, fields, files) {
-        var headers = {'Content-Type': 'text/plain'};
-
-        function doLint(sourcedata) {
-            var passed, results;
-            passed = JSLINT.JSLINT(sourcedata, jslint_options);
-            if (passed) {
-                // debug("no errors\n");
-                results = "jslint: No problems found in " + filename + "\n";
-            } else {
-                results = outputErrors(JSLINT.JSLINT.errors);
-                // debug("results are" + results);
-            }
-            return results;
-        }
-
-        if (files.source) {
-            // FIXME: It's pretty silly that we have express write the upload to
-            // a tempfile only to read the entire thing back into memory
-            // again.
-            filename = files.source.filename;
-            fs.readFile(files.source.path, 'utf8',
-                function (err, sourcedata) {
-                    var results;
-                    results = doLint(sourcedata);
-                    res.send(results, headers, 200);
-                    fs.unlink(files.source.path);
-                });
+app.post('/jslint', function (req, res) {
+    function doLint(sourcedata) {
+        var passed, results;
+        passed = JSLINT.JSLINT(sourcedata, jslint_options);
+        if (passed) {
+            results = "jslint: No problems found in " + filename + "\n";
         } else {
-            filename = fields.filename;
-            res.send(doLint(fields.source), headers, 200);
+            results = outputErrors(JSLINT.JSLINT.errors);
         }
-    });
+        return results;
+    }
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.end(doLint(req.body.source));
 });
-
 
 /* This action always return some JSLint problems. */
 var exampleFunc = function (req, res) {
