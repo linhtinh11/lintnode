@@ -5,11 +5,12 @@
 
    Invoke from bash script like:
 
-     curl --form source="<${1}" ${JSLINT_URL}
+     curl --form source="<${1}" --form filename="${1}" ${JSLINT_URL}
+     
+   or use the provided jslint.curl
+   
+     jslint.curl <file>
 
-   If you use source="@${1}" instead, curl does it like a file upload.
-   That includes a filename, which is nice, but has express make a
-   temp file for the upload.
 */
 
 /*global process, require */
@@ -21,7 +22,6 @@ var _ = require('underscore');
 var app = express.createServer();
 
 app.configure(function () {
-    app.use(require('connect-form')({keepExtensions: true}));
     app.use(express.errorHandler(
         { dumpExceptions: true, showStack: true }));
     app.use(express.bodyParser());
