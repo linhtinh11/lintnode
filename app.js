@@ -65,7 +65,7 @@ var outputErrors = function (errors) {
 };
 
 app.get('/', function (req, res) {
-    res.render('upload.haml');
+    res.send('lintnode');
 });
 
 app.post('/jslint', function (req, res) {
@@ -73,14 +73,13 @@ app.post('/jslint', function (req, res) {
         var passed, results;
         passed = JSLINT.JSLINT(sourcedata, jslint_options);
         if (passed) {
-            results = "jslint: No problems found in " + filename + "\n";
+            results = "jslint: No problems found in " + req.body.filename + "\n";
         } else {
             results = outputErrors(JSLINT.JSLINT.errors);
         }
         return results;
     }
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end(doLint(req.body.source));
+    res.send(doLint(req.body.source), {'Content-Type': 'text/plain'});
 });
 
 /* This action always return some JSLint problems. */
@@ -94,13 +93,11 @@ var exampleFunc = function (req, res) {
 app.get('/example/errors', exampleFunc);
 app.post('/example/errors', exampleFunc);
 
-
 /* This action always returns JSLint's a-okay message. */
 app.post('/example/ok', function (req, res) {
     res.send("jslint: No problems found in example.js\n",
         {'Content-Type': 'text/plain'});
 });
-
 
 function parseCommandLine() {
     var port_index, exclude_index, exclude_opts, include_index, include_opts, set_index, set_opts, set_pair, properties;
