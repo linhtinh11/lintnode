@@ -52,11 +52,14 @@
   :type 'boolean
   :group 'flymake-jslint)
 
-(defvar lintnode-jslint-excludes nil)
+(defvar lintnode-jslint-excludes nil
+  "a list of lisp symbols corresponding to jslint boolean options")
 
-(defvar lintnode-jslint-includes nil)
+(defvar lintnode-jslint-includes nil
+  "a list of lisp symbols corresponding to jslint boolean options")
 
-(defvar lintnode-jslint-set nil)
+(defvar lintnode-jslint-set nil
+  "a string of comma seperated jslint options; values are seperated via colon, e.g. maxlen:80,node:true,eqeqeq:false")
 
 (defun lintnode-start ()
   "Start the lintnode server.
