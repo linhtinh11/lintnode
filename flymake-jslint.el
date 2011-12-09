@@ -56,6 +56,8 @@
 
 (defvar lintnode-jslint-includes nil)
 
+(defvar lintnode-jslint-set nil)
+
 (defun lintnode-start ()
   "Start the lintnode server.
 Uses `lintnode-node-program' and `lintnode-location'."
@@ -68,12 +70,14 @@ Uses `lintnode-node-program' and `lintnode-location'."
 		(lintnode-includes (if (not lintnode-jslint-includes)
                                ""
                              (mapconcat 'identity (mapcar 'symbol-name lintnode-jslint-includes) ","))))
+					   
     (start-process "lintnode-server" "*lintnode*"
                    lintnode-node-program
                    lintnode-location
                    "--port" (number-to-string lintnode-port)
                    "--exclude" lintnode-excludes
-				   "--include" lintnode-includes)))
+				   "--include" lintnode-includes
+				   "--set" lintnode-jslint-set)))
 
 (defun lintnode-stop ()
   "stop the lintnode server process"
