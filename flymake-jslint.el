@@ -58,7 +58,7 @@
 (defvar lintnode-jslint-includes nil
   "a list of lisp symbols corresponding to jslint boolean options")
 
-(defvar lintnode-jslint-set nil
+(defvar lintnode-jslint-set ""
   "a string of comma seperated jslint options; values are seperated via colon, e.g. maxlen:80,node:true,eqeqeq:false")
 
 (defun lintnode-start ()
@@ -102,7 +102,8 @@ Uses `lintnode-node-program' and `lintnode-location'."
   (let ((proc (get-buffer-process "*lintnode*")))
         (if (not proc)
           (if lintnode-autostart
-              (lintnode-start)))
+              (progn (lintnode-start)
+                     (sit-for 1))))
         (flymake-mode t)))
 
 (defun flymake-jslint-init ()
